@@ -1,3 +1,8 @@
+/*
+ *	ls.c
+ * 	Just like ls
+ * 	Orz
+ */
 #include "apue.h"
 #include <dirent.h>
 
