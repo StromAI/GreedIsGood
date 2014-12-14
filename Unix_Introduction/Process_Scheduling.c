@@ -1,9 +1,9 @@
 /*
-*	Process_Scheduling.c
-*	Sliencer
-*	12:10:2014
-*	A demo from APUE about "nice()" it will show different in single core system
-*/ 
+ *	Process_Scheduling.c
+ *	Sliencer
+ *	12:10:2014
+ *	A demo from APUE about "nice()" it will show different in single core system
+ */ 
 
 #include "apue.h"
 #include <errno.h>

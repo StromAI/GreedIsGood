@@ -1,10 +1,10 @@
 /*
-*	Process_Scheduling.c
-*	Sliencer
-*	12:11:2014
-*	A demo from APUE about Process times 
-*	It will shows the time of shell cmd
-*/ 
+ *	Process_Scheduling.c
+ *	Sliencer
+ *	12:11:2014
+ *	A demo from APUE about Process times 
+ *	It will shows the time of shell cmd
+ */ 
 
 #include "apue.h"
 #include <sys/times.h>
