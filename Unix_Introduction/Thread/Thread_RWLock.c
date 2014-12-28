@@ -1,3 +1,12 @@
+/*
+ *	Thread_RWLock.c
+ *	Sliencer
+ *	12:28:2014
+ *	A demo from APUE about thread reader-writer lock
+ *	A job queue protected by the reader-writer lock here. 
+ *	We could use them in some system that read operate is
+ *	much more then write operate.
+ */ 
 #include <stdlib.h>
 #include <pthread.h>
 
@@ -112,10 +121,4 @@ job_find(struct queue *qp, pthread_t id)
 
 	pthread_rwlock_unlock(&qp->q_lock);
 	return(jp);
-}
-
-int 
-main()
-{
-	exit(0);
 }
