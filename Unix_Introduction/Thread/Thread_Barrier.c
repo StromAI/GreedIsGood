@@ -1,14 +1,17 @@
 /*
- *	Thread_RWLock.c
+ *	Thread_Barrier.c
  *	Sliencer
- *	12:28:2014
+ *	12:29:2014
  *	A demo from APUE about barrier
  *	Such demo use 8 thread to sort 8000000 numbers,each thread
  *	dealing with 1000000 numbers.In the demo we use barrier to 
  *	wait every thread till them end. Then use marge sort marge
  *	datas.
- *	The result is shows in the other file(out.txt) which
- *	shows us the used time and sort list; 
+ *	The result will shows us the used time and sort list, but 
+ *	is too large to commit.So I only commit the sort time here:
+ *
+ *	sort took 1.0344 second
+ *
  */ 
 #include "apue.h"
 #include <pthread.h>
