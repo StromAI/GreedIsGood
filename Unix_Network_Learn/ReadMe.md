@@ -1,6 +1,7 @@
 Tip
 ---
 1.Run ./configure in unpv13e
+
 2.Use command
   * cd lib
   * make
