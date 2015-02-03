@@ -1,8 +1,8 @@
 /**
  *	daytimetcpsrv.c
  *	Sliencer
- *	01:02:2014
- *	A demo from UNP about thread mutex
+ *	01:02:2015
+ *	A demo from UNP
  *	A simple get-time server(for ipv4)
  */  
 
