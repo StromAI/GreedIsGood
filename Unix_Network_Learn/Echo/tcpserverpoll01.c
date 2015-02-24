@@ -3,9 +3,7 @@
  *	Sliencer
  *	02:24:2015
  *	A demo from UNP
- *	A simple echo client(for ipv4) use select to handle 
- *	the situations when server is close and would consider 
- *	about the batch jobs
+ *	A server use poll in it which without another process
  */ 
 
 #include "../unp.h"
