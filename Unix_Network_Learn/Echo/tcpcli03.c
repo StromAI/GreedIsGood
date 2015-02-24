@@ -2,70 +2,38 @@
 /**
  *	daytimetcpsrv.c
  *	Sliencer
- *	02:02:2015
+ *	02:24:2015
  *	A demo from UNP
  *	A simple echo client(for ipv4) use select to handle 
- *	the situations when server is close
+ *	the situations when server is close and would consider 
+ *	about the batch jobs
  */ 
 
  #include "../unp.h"
  #include "apue.h"
 
 ssize_t
-readline(int fd, void *vptr, size_t maxlen)
+Read(int fd, void *ptr, size_t nbytes)
 {
-	ssize_t n, rc;
-	char c, *ptr;
-	ptr = vptr;
-	for (n = 1; n < maxlen; n++)
-	{
-again:
-		if ((rc = read(fd, &c, 1)) == 1)
-		{
-			*ptr++ = c;
-			if (c == '\n')
-				break;
-		}		
-		else if (rc == 0)
-		{
-			*ptr = 0;
-			return(n -1);
-		}
-		else
-		{
-			if (errno == EINTR)
-				goto again;
-			return(-1);
-		}
-	}
-	*ptr = 0;
-		
+	ssize_t		n;
+
+	if ( (n = read(fd, ptr, nbytes)) == -1)
+		err_sys("read error");
 	return(n);
 }
 
-ssize_t
-writen(int fd, const void *vptr, size_t n)
+void
+Write(int fd, void *ptr, size_t nbytes)
 {
-	size_t nleft;
-	ssize_t nwritten;
-	const char *ptr;
+	if (write(fd, ptr, nbytes) != nbytes)
+		err_sys("write error");
+}
 
-	ptr = vptr;
-	nleft = n;
-	while (nleft > 0)
-	{
-		if ((nwritten = write(fd, ptr, nleft)) < 0 )
-		{
-			if (nwritten < 0 && errno == EINTR)
-				nwritten = 0;
-			else
-				return(-1);
-		}
-
-		nleft -= nwritten;
-		ptr += nwritten;
-	}
-	return(n);
+void
+Shutdown(int fd, int how)
+{
+	if (shutdown(fd, how) < 0)
+		err_sys("shutdown error");
 }
 
 int
@@ -82,31 +50,42 @@ Select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 void
 str_cli(FILE *fp, int sockfd)
 {
-	int maxfdp1;
+	int maxfdp1, stdineof;
 	fd_set rset;
-	char sendline[MAXLINE], recvline[MAXLINE];
+	char buf[MAXLINE];
+	int n;
 
+	stdineof = 0;
 	FD_ZERO(&rset);
-	for (;;)
+	for(;;)
 	{
-		FD_SET(fileno(fp), &rset);
+		if (stdineof == 0)
+			FD_SET(fileno(fp), &rset);
 		FD_SET(sockfd, &rset);
 		maxfdp1 = max(fileno(fp), sockfd) + 1;
 		Select(maxfdp1, &rset, NULL, NULL, NULL);
 
 		if (FD_ISSET(sockfd, &rset))
 		{
-			if (readline(sockfd, recvline, MAXLINE) == 0)
-				err_quit("str_cli: server terminated prematurely");
-			fputs(recvline, stdout);
+			if ((n = Read(sockfd, buf, MAXLINE)) == 0)
+			{
+				if (stdineof == 1)
+					return;
+				else
+					err_quit("str_cli: server terminated prematurely");
+			}
+			Write(fileno(stdout), buf, n);
 		}
-
 		if (FD_ISSET(fileno(fp), &rset))
 		{
-			if (fgets(sendline, MAXLINE, fp) == NULL)
-				return ;
-			if (writen(sockfd, sendline, strlen(sendline)) < 0)
-				err_sys("write err");
+			if ((n = Read(fileno(fp), buf, MAXLINE)) == 0)
+			{
+				stdineof = 1;
+				Shutdown(sockfd, SHUT_WR);	/*	send FIN */
+				FD_CLR(fileno(fp), &rset);
+				continue;
+			}
+			Write(sockfd, buf, n);
 		}
 	}
 }
@@ -136,3 +115,4 @@ main(int argc, char **argv)
 	exit(0);
 }
 
+ 
