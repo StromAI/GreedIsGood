@@ -1,6 +1,6 @@
  
 /**
- *	daytimetcpsrv.c
+ *	tcpcli03.c
  *	Sliencer
  *	02:24:2015
  *	A demo from UNP
@@ -110,6 +110,9 @@ main(int argc, char **argv)
 
  	if (connect(sockfd, (SA *)&servaddr, sizeof(servaddr)) < 0)
  		err_sys("connect err");
+
+ 	//FILE* fp;
+ 	//fp = fopen("/home/sliencer/CodeDump/GreedIsGood/Unix_Network_Learn/Echo/tcpcli01.c", "r");
 
  	str_cli(stdin, sockfd);
 	exit(0);

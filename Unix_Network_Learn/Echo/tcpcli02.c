@@ -1,6 +1,6 @@
  
 /**
- *	daytimetcpsrv.c
+ *	tcpcli02.c
  *	Sliencer
  *	02:23:2015
  *	A demo from UNP
